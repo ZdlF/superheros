@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="/node_modules/art-template/lib/template-web.js"></script>
+  <!-- 在浏览器端使用 axios 来发起Ajax请求 -->
+  <script src="/node_modules/axios/dist/axios.min.js"></script>
+
+  <script id="tmpl" type="text/template">
+      <p><strong>id: {{ id }}</strong></p>
+      <p><strong>姓名: {{ name }}</strong></p>
+      <p><strong>性别: {{ gender }}</strong></p>
+      <p><strong>创建时间: {{ ctime }}</strong></p>
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <h1><a href="/">亡者农药</a>
+      <small>查看英雄信息</small>
+    </h1>
+    <hr>
+
+    <div id="info"></div>
+
+  </div>
+
+  <!-- 定义模板标签 -->
+
+
+  <script>
+    $(function () {
+      var x = new URLSearchParams(location.search)
+      var id = x.get('id')
+      // console.log(id)
+      axios.get('http://127.0.0.1:5000/api/gethero', {
+        params: {
+          id
+        }
+      })
+        .then(function (results) {
+          console.log(results)
+          const {status,data:{err_code,message}} = results
+          if (status == 200 && err_code == 0) {
+            const html = template('tmpl', message)
+            $("#info").html(html)
+          }
+        })
+    })
+  </script>
+</body>
+
+</html>
